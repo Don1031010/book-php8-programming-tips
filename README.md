@@ -349,6 +349,118 @@ foreach ($test as $item) Low::logVar($item);
 readfile(High::LOG_FILE);
 ```
 
+## Improving code using typed properties
+
+### What are typed properties?
+
+A typed property is a class property with a data type preassigned.  All properties defined using constructor property promotion are
+automatically property typed!
+
+```php
+// /repo/ch01/php8_prop_type_1.php
+declare(strict_types=1)
+class Test {
+ public int $id = 0;
+ public int $token = 0;
+ public string $name = '';
+}
+$test = new Test();
+$test->id = 'ABC';
+```
+
+### Why is property typing important?
+
+Typed properties is part of a general trend in PHP first seen in PHP 7. The trend is toward
+making language refinements that restrict and tighten the use of your code. This leads to
+better code, which means fewer bugs.
+
+## Working with new PHP 8 operators
+
+### Using the variadics operator
+
+The variadics operator consists of three leading dots (...) preceding a normal PHP
+variable (or object property). . It's also referred to as the following:
+
+• Splat operator
+• Scatter operator
+• Spread operator
+
+
+#### Unknown number of arguments
+
+One of the most common uses for the variadics operator is in a situation where you define
+a function with an unknown number of arguments.
+
+```php
+// /repo/ch02/php7_variadic_params.php
+function multiVardump(...$args) {
+ $output = '';
+ foreach ($args as $var) {
+     $output .= var_export($var, TRUE);
+ }
+ return $output;
+}
+$a = new ArrayIterator(range('A','F'));
+$b = function (string $val) { return str_rot13($val); };
+$c = [1,2,3];
+$d = 'TEST';
+echo multiVardump($a, $b, $c);
+echo multiVardump($d);
+```
+
+**Tip**
+
+There is a `func_get_args()` PHP function that gathers all function
+arguments into an array. The variadics operator is preferred, however, as it
+must be stated in the function signature, and thus makes the intentions of the
+program developer much clearer.
+
+#### Vacuuming up remaining arguments
+
+Another use for the variadics operator is to vacuum up any remaining arguments. This
+technique allows you to mix mandatory parameters with an unknown number of optional
+parameters.
+
+```php
+function where(stdClass $obj, ...$args) {
+ $obj->where = (empty($obj->where)) ? $args : array_merge($obj->where, $args);
+}
+```
+
+#### Using variadics operator as a replacement
+
+So far, none of this is foreign to an experienced PHP developer. What's different in PHP
+8 is that the variadics operator can now be used in situations where widening might come
+into play.
+
+### Using the nullsafe operator
+
+The nullsafe operator is used in a chain of object property references. If one of the
+properties in the chain does not exist (in other words, it is considered NULL), the operator
+returns a value of NULL safely, without issuing a warning.
+
+### Using the nullsafe operator to short-circuit a chain
+
+### The concatenation operator has been demoted
+
+### The concatenation operator has been demoted
+
+### Using nested ternary operators
+
+### Using arrow functions
+An arrow function is a shorthand syntax for the traditional anonymous
+function.
+
+```php
+fn(<ARGS>) => <EXPRESSION>
+```
+
+#### Variable inheritance
+
+Anonymous functions, much like any standard PHP function, only recognize variables
+outside their scope if you pass the value as a parameter, use a global keyword, or add a
+use() modifier.
+
 
 
 
