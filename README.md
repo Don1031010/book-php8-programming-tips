@@ -143,5 +143,40 @@ What goes inside the square brackets does have some restrictions; for example, a
 
 Another example has to do with union types (explained in the Exploring new data types section). You can use `#[param('int|array test')]` in an attribute, but this is not allowed: `#[int|array('test')]`. Another peculiarity is that class-level attributes must be placed immediately before the class keyword and after any use statements.
 
+If you need to get attribute information from a PHP 8 class, the Reflection extension has been updated to include attribute support. A new getAttributes() method that returns an array of ReflectionAttribute instances has been added.
+
+```php
+<?php
+// /repo/ch01/php8_attrib_reflect.php
+
+define('FONT_FILE', __DIR__ . '/../fonts/FreeSansBold.ttf');
+
+require_once __DIR__ . '/../src/Server/Autoload/Loader.php';
+
+$loader = new \Server\Autoload\Loader();
+
+use Php8\Image\SingleChar;
+
+$char    = new SingleChar('A', FONT_FILE);
+$reflect = new ReflectionObject($char);
+$attribs = $reflect->getAttributes();
+
+echo 'Class Attributes\n';
+foreach ($attribs as $obj) {
+    echo '\n' . $obj->getName() . '\n';
+    echo implode('\t', $obj->getArguments());
+}
+
+echo 'Method Attributes for colorAlloc()\n';
+
+$reflect = new ReflectionMethod($char, 'colorAlloc');
+$attribs = $reflect->getAttributes();
+foreach ($attribs as $obj) {
+    echo '\n' . $obj->getName() . '\n';
+    echo implode('\t', $obj->getArguments());
+}
+```
+
+
 
 
