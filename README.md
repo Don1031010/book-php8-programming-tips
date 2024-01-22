@@ -137,54 +137,9 @@ class SingleChar {
     public function colorAlloc() { /* code not shown */ }
 ```
 
-
-    /**
-
-     * Allocates a color resource
-
-     *
-
-     * @param array|int $r,
-
-     * @param int $g
-
-     * @param int $b]
-
-     * @return int $color
-
-     */
-
-    public function colorAlloc()
-
-    { /* code not shown */ }
-
-Now, have a look at the same thing using attributes:
-
-// /repo/src/Php8/Image/SingleChar.php
-
-namespace Php8\Image;
-
-#[description('Creates a single image')]
-
-class SingleChar {
-
-    #[SingleChar\colorAlloc\description('Allocates color')]
-
-    #[SingleChar\colorAlloc\param('r','int|array')]
-
-    #[SingleChar\colorAlloc\param('g','int')]
-
-    #[SingleChar\colorAlloc\param('b','int')]
-
-    #[SingleChar\colorAlloc\returns('int')]
-
-    public function colorAlloc() { /* code not shown */ }
-
-As you can see, in addition to providing a more robust compilation and avoiding the hidden dangers mentioned, it's also more efficient in terms of space usage.
-
 **TIP**
 
-What goes inside the square brackets does have some restrictions; for example, although `#[returns('int')]` is allowed, this is not: `#[return('int')`. The reason for this is because return is a keyword.
+What goes inside the square brackets does have some restrictions; for example, although `#[returns('int')]` is allowed, this is not: `#[return('int')]`. The reason for this is because return is a keyword.
 
 Another example has to do with union types (explained in the Exploring new data types section). You can use `#[param('int|array test')]` in an attribute, but this is not allowed: `#[int|array('test')]`. Another peculiarity is that class-level attributes must be placed immediately before the class keyword and after any use statements.
 
