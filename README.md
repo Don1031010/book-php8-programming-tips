@@ -222,5 +222,138 @@ class SingleChar {
 }
 ```
 
+## Incorporating match expressions into your program code
+
+Match expressions are a more accurate shorthand syntax that can potentially replace the tired old switch statement that came directly from the C language.
+
+### Match expression general syntax
+
+Match expression syntax is much like that of an array, where the key is the item to match and the value is an expression.
+
+```php
+$result = match(<EXPRESSION>) {
+    <ITEM> => <EXPRESSION>,
+   [<ITEM> => <EXPRESSION>,]
+    default => <DEFAULT EXPRESSION>
+};
+```
+
+Example:
+
+```php
+// /repo/ch01/php8_switch.php
+function get_symbol($iso) {
+    return match ($iso) {
+        'EGP','GBP' => '£',
+        'CNY'       => '¥',
+        'EUR'       => '€',
+        'THB'       => '฿',
+        default     => '$'
+    };
+}
+
+$test = ['CNY', 'EGP', 'EUR', 'GBP', 'THB', 'MXD'];
+foreach ($test as $iso)
+    echo 'The currency symbol for ' . $iso  . ' is ' . get_symbol($iso) . '\n';
+```
+
+## Understanding named arguments
+
+Named arguments represent a way to avoid confusion when calling functions or methods
+with a large number of arguments. This not only helps avoid problems with arguments
+being supplied in an incorrect order, but also helps you to skip arguments with
+defaults.
+
+### Named argument generic syntax
+
+You then specify that name, without the dollar sign,
+followed by a colon and the value to be supplied, as follows:
+
+```php
+$result = function_name( arg1 : <VALUE>, arg2 : <value>);
+```
+
+## Exploring new data types
+
+### Union types
+
+PHP 8 introduces a new syntax that allows you to specify a union of types,
+instead of just one.
+
+#### Union type syntax
+
+```php
+function ( type|type|type $var) {}
+```
+
+* `void` cannot be included in a union type such as in `void|int`.
+* `mixed` cannot be included in a union type such as in `mixed|int`.
+* Nullable types cannot be included in a union type, such as in `string|?array`.
+* cannot include both `true` and `false` in a union type: `true|false`.
+* redundant types are not allowed.
+
+**Tip**
+
+Best practice: When using union types, **type coercion** (the process whereby
+PHP converts a data type internally to satisfy the requirements of the function)
+can be an issue if strict type checking is not enforced. Accordingly, it's a best
+practice to add the following at the top of any file where union types are used:
+`declare(strict_types=1);`.
+
+### mixed type
+
+`mixed` is another new type introduced in PHP 8. Unlike a union type, mixed is an actual
+data type that represents the ultimate union of types. It's used to indicate that any and all
+data types are accepted.
+
+by using mixed in a function or method signature, you clearly signal your
+intention for the use of this parameter.
+
+### The effect of a mixed type on inheritance
+
+```php
+// /repo/ch01/php8_mixed_type.php
+declare(strict_types=1);
+class High {
+ const LOG_FILE = __DIR__ . '/../data/test.log';
+ protected static function logVar(object $var) {
+     $item = date('Y-m-d') . ':' . var_export($var, TRUE);
+     return error_log($item, 3, self::LOG_FILE);
+ }
+}
+```
+
+```php
+class Low extends High {
+ public static function logVar(mixed $var) {
+     $item = date('Y-m-d') . ':' . var_export($var, TRUE);
+     return error_log($item, 3, self::LOG_FILE);
+ }
+}
+```
+
+```php
+if (file_exists(High::LOG_FILE)) unlink(High::LOG_FILE)
+$test = [
+ 'array' => range('A', 'F'),
+ 'func' => function () { return __CLASS__; },
+ 'anon' => new class () {
+    public function __invoke() {
+     return __CLASS__;
+    }
+  },
+];
+
+foreach ($test as $item) Low::logVar($item);
+
+readfile(High::LOG_FILE);
+```
+
+
+
+
+
+
+
 
 
