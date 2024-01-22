@@ -177,6 +177,50 @@ foreach ($attribs as $obj) {
 }
 ```
 
+Here is the output from the code shown in the preceding snippet:
+
+```sh
+Class Attributes
+Php8\Image\SingleChar
+Php8\Image\description
+Creates a single image, by default black on whiteMethod
+
+Attributes for colorAlloc()
+Php8\Image\SingleChar\colorAlloc\description
+Allocates a color resource
+Php8\Image\SingleChar\colorAlloc\param
+r    int|array
+Php8\Image\SingleChar\colorAlloc\param
+g    int
+Php8\Image\SingleChar\colorAlloc\param
+b    int
+Php8\Image\SingleChar\colorAlloc\returns
+int
+```
+
+```php
+namespace Php8\Image;
+use Attribute;
+use Php8\Image\Strategy\ {PlainText,PlainFill};
+
+#[SingleChar]
+#[description('Creates black on white image')]
+class SingleChar {
+    // not all code is shown
+    #[SingleChar\colorAlloc\description('Allocates color')]
+    #[SingleChar\colorAlloc\param('r','int|array')]
+    #[SingleChar\colorAlloc\param('g','int')]
+    #[SingleChar\colorAlloc\param('b','int')]
+    #[SingleChar\colorAlloc\returns('int')]    
+    public function colorAlloc(
+         int|array $r, int $g = 0, int $b = 0) {
+
+        if (is_array($r))   [$r, $g, $b] = $r;
+
+        return \imagecolorallocate($this->image, $r, $g, $b);
+    }
+}
+```
 
 
 
